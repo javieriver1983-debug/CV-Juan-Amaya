@@ -49,7 +49,7 @@ h1, h2, h3, .section-title {
     position: fixed;
     top: 0;
     width: 100%;
-    z-index: 1000;
+    z-index: 2000;
     background: rgba(10, 10, 10, 0.85);
     backdrop-filter: blur(15px);
     padding: 1.2rem 0;
@@ -75,28 +75,37 @@ h1, h2, h3, .section-title {
     text-shadow: var(--neon-glow);
 }
 
+/* nav-links: hidden by default (mobile-first), shown on desktop */
 .nav-links {
-    display: flex;
+    display: none;
     list-style: none;
 }
 
-.nav-links li {
-    margin-left: 2.5rem;
-}
+/* Desktop: show as horizontal row */
+@media (min-width: 769px) {
+    .nav-links {
+        display: flex;
+        align-items: center;
+    }
 
-.nav-links a {
-    text-decoration: none;
-    color: var(--gray);
-    font-weight: 500;
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    transition: var(--transition);
-}
+    .nav-links li {
+        margin-left: 2.5rem;
+    }
 
-.nav-links a:hover {
-    color: var(--neon-cyan);
-    text-shadow: var(--neon-glow);
+    .nav-links a {
+        text-decoration: none;
+        color: var(--gray);
+        font-weight: 500;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: var(--transition);
+    }
+
+    .nav-links a:hover {
+        color: var(--neon-cyan);
+        text-shadow: var(--neon-glow);
+    }
 }
 
 /* Hero */
@@ -162,7 +171,7 @@ h1, h2, h3, .section-title {
 }
 
 .hero-text h1 {
-    font-size: 4rem;
+    font-size: clamp(2rem, 8vw, 4rem);
     margin-bottom: 0.5rem;
     line-height: 1.1;
     letter-spacing: -1px;
@@ -617,22 +626,44 @@ footer {
     font-size: 0.9rem;
 }
 
-/* Mobile Menu */
+/* ====== HAMBURGER MENU ====== */
 .menu-toggle {
     display: none;
     cursor: pointer;
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 6px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
 }
 
 .bar {
     display: block;
-    width: 25px;
+    width: 26px;
     height: 3px;
-    margin: 5px auto;
-    background: var(--white);
+    background: var(--neon-cyan);
+    border-radius: 3px;
     transition: var(--transition);
+    box-shadow: var(--neon-glow);
 }
 
-/* Reveal Animations */
+.menu-toggle.is-active .bar:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0);
+}
+
+.menu-toggle.is-active .bar:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+}
+
+.menu-toggle.is-active .bar:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+}
+
+/* ====== REVEAL ANIMATIONS ====== */
 .reveal {
     opacity: 0;
     transform: translateY(30px);
@@ -644,39 +675,87 @@ footer {
     transform: translateY(0);
 }
 
-/* Responsive */
+/* ====== MOBILE RESPONSIVE (max 768px) ====== */
 @media (max-width: 768px) {
-    .menu-toggle {
-        display: block;
+    .navbar {
+        padding: 0.9rem 0;
     }
 
-    .nav-links {
+    /* Show hamburger button */
+    .menu-toggle {
+        display: flex;
+        z-index: 9999;
+    }
+
+    /* Mobile drawer: shown only when .active is added by JS */
+    .nav-links.active {
+        display: flex !important;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
         position: fixed;
-        top: -100%;
+        top: 0;
         left: 0;
         width: 100%;
-        background: var(--dark-surface);
-        flex-direction: column;
-        text-align: center;
-        transition: 0.3s;
-        padding: 4rem 0;
-        border-bottom: 1px solid var(--neon-cyan);
+        height: 100vh;
+        background: rgba(8, 8, 8, 0.97);
+        backdrop-filter: blur(20px);
+        z-index: 9998;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        animation: fadeIn 0.3s ease;
     }
 
-    .nav-links.active {
-        top: 80px;
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to   { opacity: 1; }
     }
 
-    .nav-links li {
-        margin: 1.5rem 0;
+    .nav-links.active li {
+        margin: 1.2rem 0;
+    }
+
+    .nav-links.active a {
+        font-size: 1.6rem;
+        color: var(--white);
+        text-decoration: none;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        font-weight: 700;
+        transition: var(--transition);
+    }
+
+    .nav-links.active a:hover,
+    .nav-links.active a:active {
+        color: var(--neon-cyan);
+        text-shadow: var(--neon-glow);
+    }
+
+    /* Hero spacing so content clears the fixed navbar */
+    .hero {
+        padding-top: 120px;
     }
 
     .hero-text h1 {
-        font-size: 2.8rem;
+        font-size: clamp(1.8rem, 9vw, 3rem);
+    }
+
+    .section {
+        padding: 4rem 0;
+    }
+
+    .section-title {
+        font-size: 1.8rem;
+        margin-bottom: 2.5rem;
     }
 
     .btn-secondary {
         margin: 1rem 0 0 0;
         display: block;
+    }
+
+    .contact-card {
+        padding: 2rem 1rem;
     }
 }
